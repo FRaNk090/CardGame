@@ -22,12 +22,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        image1 = R.drawable.cow1;
-//        image2 = R.drawable.cow2;
-//        image3 = R.drawable.cow3;
-//        image4 = R.drawable.cow4;
-//        image5 = R.drawable.cow5;
-//        image6 = R.drawable.cow6;
         backImage = R.drawable.question;
         card1 = new Card(R.drawable.cow1);
         card2 = new Card(R.drawable.cow2);
@@ -38,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
 
         Card[] cards = {card1, card2, card3, card4, card5, card6};
 
-//        Integer[] imageList = {image1, image2, image3, image4, image5, image6};
         for (int i = 0; i < cards.length; i++){
             cardArray.add(cards[i]);
             cardArray.add(cards[i]);
@@ -90,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         for (int i = 0; i < cardArray.size(); i++){
-            int cardNumer = (int) listOfImageView[i].getTag();
             if (cardArray.get(i).isCovered()){
                 listOfImageView[i].setImageResource(backImage);
                 listOfImageView[i].setEnabled(true);
