@@ -1,7 +1,5 @@
 package com.example.cardgame;
 
-import androidx.annotation.Nullable;
-
 class Card {
     private boolean covered;
     private int value;
