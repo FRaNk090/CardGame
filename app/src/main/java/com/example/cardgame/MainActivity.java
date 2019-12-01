@@ -5,39 +5,38 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-//Test
-//    int image1, image2, image3, image4, image5, image6;
-    Card card1, card2, card3, card4, card5, card6;
-    int backImage;
-    ImageView[] listOfImageView;
-    ArrayList<Card> cardArray = new ArrayList<>();
-    int firstCard, secondCard, numCardOver;
+
+    private CardGame cardGame;
+    private TextView score;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        backImage = R.drawable.question;
-        card1 = new Card(R.drawable.cow1);
-        card2 = new Card(R.drawable.cow2);
-        card3 = new Card(R.drawable.cow3);
-        card4 = new Card(R.drawable.cow4);
-        card5 = new Card(R.drawable.cow5);
-        card6 = new Card(R.drawable.cow6);
+        int backImage = R.drawable.question;
+        Card card1 = new Card(R.drawable.cow1);
+        Card card2 = new Card(R.drawable.cow2);
+        Card card3 = new Card(R.drawable.cow3);
+        Card card4 = new Card(R.drawable.cow4);
+        Card card5 = new Card(R.drawable.cow5);
+        Card card6 = new Card(R.drawable.cow6);
+        score = (TextView) findViewById(R.id.score);
 
         Card[] cards = {card1, card2, card3, card4, card5, card6};
-
+        ArrayList<Card> cardArray = new ArrayList<>();
         for (int i = 0; i < cards.length; i++){
             cardArray.add(cards[i]);
             cardArray.add(cards[i]);
         }
         Collections.shuffle(cardArray);
-        listOfImageView = new ImageView[12];
+        ImageView[] listOfImageView = new ImageView[12];
         listOfImageView[0] = (ImageView) findViewById(R.id.pic1);
         listOfImageView[1] = (ImageView) findViewById(R.id.pic2);
         listOfImageView[2] = (ImageView) findViewById(R.id.pic3);
@@ -51,24 +50,28 @@ public class MainActivity extends AppCompatActivity {
         listOfImageView[10] = (ImageView) findViewById(R.id.pic11);
         listOfImageView[11] = (ImageView) findViewById(R.id.pic12);
 
-        for (int i = 0; i < listOfImageView.length; i++){
-            listOfImageView[i].setTag(i);
-        }
+        cardGame = new CardGame(cardArray, listOfImageView,backImage);
     }
 
     @Override
     protected void onResume(){
         super.onResume();
-        for (ImageView imageView: listOfImageView){
+        setViews();
+        score.setText("Score: 0");
+    }
+
+    private void setViews(){
+        for (ImageView imageView: cardGame.getListOfImageView()){
             imageView.setOnClickListener((view)->{
                 int cardNumber = (int) imageView.getTag();
-                flipCard(imageView, cardNumber);
-                if (numCardOver == 2){
+                cardGame.flipCard(imageView, cardNumber);
+                if (cardGame.getNumCardOver() == 2){
                     Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            checkResult(firstCard, secondCard);
+                            cardGame.checkResult();
+                            score.setText("Score: " + cardGame.getScore());
                         }
                     }, 1000);
                 }
@@ -76,36 +79,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void checkResult(int firstCard, int secondCard) {
-        if (!(cardArray.get(firstCard).equals(cardArray.get(secondCard)))){
-            cardArray.get(firstCard).setCovered(true);
-            cardArray.get(secondCard).setCovered(true);
-        }
 
-        for (int i = 0; i < cardArray.size(); i++){
-            if (cardArray.get(i).isCovered()){
-                listOfImageView[i].setImageResource(backImage);
-                listOfImageView[i].setEnabled(true);
-            }
-        }
-        numCardOver = 0;
-    }
-
-
-    private void flipCard(ImageView imageView, int cardNumber) {
-        imageView.setImageResource(cardArray.get(cardNumber).getValue());
-        cardArray.get(cardNumber).setCovered(false);
-        if (numCardOver == 0){
-            firstCard = cardNumber;
-            numCardOver++;
-            imageView.setEnabled(false);
-        } else{
-            secondCard = cardNumber;
-            numCardOver++;
-            for (ImageView image: listOfImageView){
-                image.setEnabled(false);
-            }
-        }
-    }
 
 }
